@@ -5,7 +5,7 @@ import pygame
 pygame.font.init()
  
 # Total window
-screen = pygame.display.set_mode((500, 600))
+screen = pygame.display.set_mode((500, 620))
  
 # Title and Icon
 pygame.display.set_caption("SUDOKU SOLVER USING BACKTRACKING")
@@ -94,21 +94,26 @@ def valid(m, i, j, val):
             if m[i][j] == val:
                 return False
     return True
+
+def find_empty(bo):
+    for j in range(len(bo)):
+        for i in range(len(bo[0])):
+            if bo[i][j] == 0:
+                return (i, j)  # row, col
+
+    return None
  
 # Solves the sudoku board using Backtracking Algorithm
 def solve(grid, i, j):
-     
-    while grid[i][j] != 0:
-        if i < 8:
-            i += 1
-        elif i == 8 and j < 8:
-            i = 0
-            j += 1
-        elif i == 8 and j == 8:
-            return True
-    pygame.event.pump()   
+    find = find_empty(grid)
+    if not find:
+        return True
+    else:
+        i, j = find
+    pygame.event.pump()
+    
     for it in range(1, 10):
-        if valid(grid, i, j, it) == True:
+        if valid(grid, i, j, it):
             grid[i][j] = it
             global x, y
             x = i
@@ -119,7 +124,7 @@ def solve(grid, i, j):
             draw_box()
             pygame.display.update()
             pygame.time.delay(50)
-            if solve(grid, i, j) == 1:
+            if solve(grid, i, j):
                 return True
             else:
                 grid[i][j] = 0
@@ -135,17 +140,20 @@ def solve(grid, i, j):
 # Display instruction for the game
 def instruction():
     text1 = font2.render("Pressione D para reiniciar", 1, (0, 0, 0))
-    text2 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
+    text2 = font2.render("Pressione 1 para solução automática", 1, (0, 0, 0))
+    text3 = font2.render("Pressione 2 para solução interativa", 1, (0, 0, 0))
     screen.blit(text1, (20, 520))       
     screen.blit(text2, (20, 540))
+    screen.blit(text3, (20, 560))
  
 # Display options when solved
 def result():
-    text1 = font1.render("FINISHED PRESS R or D", 1, (0, 0, 0))
-    screen.blit(text1, (20, 570))   
+    text1 = font1.render("FINISHED", 1, (0, 0, 0))
+    screen.blit(text1, (20, 580))   
 run = True
 flag1 = 0
 flag2 = 0
+interactive = 0
 rs = 0
 error = 0
 # The loop thats keep the window running
@@ -178,25 +186,25 @@ while run:
                 y += 1
                 flag1 = 1   
             if event.key == pygame.K_1:
-                val = 1
-            if event.key == pygame.K_2:
-                val = 2   
-            if event.key == pygame.K_3:
-                val = 3
-            if event.key == pygame.K_4:
-                val = 4
-            if event.key == pygame.K_5:
-                val = 5
-            if event.key == pygame.K_6:
-                val = 6
-            if event.key == pygame.K_7:
-                val = 7
-            if event.key == pygame.K_8:
-                val = 8
-            if event.key == pygame.K_9:
-                val = 9 
-            if event.key == pygame.K_RETURN:
                 flag2 = 1
+            # if event.key == pygame.K_2:
+            #     val = 2   
+            # if event.key == pygame.K_3:
+            #     val = 3
+            # if event.key == pygame.K_4:
+            #     val = 4
+            # if event.key == pygame.K_5:
+            #     val = 5
+            # if event.key == pygame.K_6:
+            #     val = 6
+            # if event.key == pygame.K_7:
+            #     val = 7
+            # if event.key == pygame.K_8:
+            #     val = 8
+            # if event.key == pygame.K_9:
+            #     val = 9 
+            # if event.key == pygame.K_RETURN:
+            #     flag2 = 1
             # If D is pressed reset the board to default
             if event.key == pygame.K_d:
                 rs = 0
@@ -244,4 +252,4 @@ while run:
     pygame.display.update() 
  
 # Quit pygame window   
-pygame.quit()    
+# pygame.quit()    
