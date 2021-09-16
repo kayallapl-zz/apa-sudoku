@@ -53,7 +53,7 @@ def draw():
             if grid[i][j] != 0:
  
                 # Fill blue color in already numbered grid
-                pygame.draw.rect(screen, (0, 153, 153), (i * dif, j * dif, dif + 1, dif + 1))
+                pygame.draw.rect(screen, (255, 255, 255), (i * dif, j * dif, dif + 1, dif + 1))
  
                 # Fill grid with default numbers specified
                 text1 = font1.render(str(grid[i][j]), 1, (0, 0, 0))
@@ -118,7 +118,7 @@ def solve(grid, i, j):
             draw()
             draw_box()
             pygame.display.update()
-            pygame.time.delay(20)
+            pygame.time.delay(50)
             if solve(grid, i, j) == 1:
                 return True
             else:
@@ -134,7 +134,7 @@ def solve(grid, i, j):
  
 # Display instruction for the game
 def instruction():
-    text1 = font2.render("PRESS D TO RESET TO DEFAULT / R TO EMPTY", 1, (0, 0, 0))
+    text1 = font2.render("Pressione D para reiniciar", 1, (0, 0, 0))
     text2 = font2.render("ENTER VALUES AND PRESS ENTER TO VISUALIZE", 1, (0, 0, 0))
     screen.blit(text1, (20, 520))       
     screen.blit(text2, (20, 540))
@@ -196,23 +196,7 @@ while run:
             if event.key == pygame.K_9:
                 val = 9 
             if event.key == pygame.K_RETURN:
-                flag2 = 1  
-            # If R pressed clear the sudoku board
-            if event.key == pygame.K_r:
-                rs = 0
-                error = 0
-                flag2 = 0
-                grid = [
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0, 0, 0, 0, 0]
-                ]
+                flag2 = 1
             # If D is pressed reset the board to default
             if event.key == pygame.K_d:
                 rs = 0
