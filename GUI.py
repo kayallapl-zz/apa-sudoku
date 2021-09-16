@@ -85,9 +85,9 @@ def raise_error2():
 def valid(m, i, j, val):
     for it in range(9):
         if m[i][it] == val:
-            return (False, "linha")
-        if m[it][j] == val:
             return (False, "coluna")
+        if m[it][j] == val:
+            return (False, "linha")
     it = i // 3
     jt = j // 3
     for i in range(it * 3, it * 3 + 3):
