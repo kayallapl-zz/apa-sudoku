@@ -138,17 +138,25 @@ def solve(grid, i, j):
             pygame.display.update()
             pygame.time.delay(50)
         pause = True
-        print("\n tentando: ")
-        print(it)
-        print("\n na posição: ")
-        print(i, j)
-        print("\nnão conseguiu pq:  ")
-        print(motivo)
+        feedback(it, i, j, motivo)
+        pygame.display.update()
         while pause:
             event = pygame.event.wait()
             if event.type == KEYDOWN:  # Unpausing
                 pause = False
     return False 
+ 
+# Display instruction for the game
+def feedback(it, linha, coluna, motivo):
+    frase1 = "Tentativa de posicionar o número " + str(it)
+    frase2 = "na linha " + str(linha+1) +", coluna " + str(coluna+1) + ", "
+    frase3 = "porém há um mesmo número na mesma " + str(motivo)
+    text1 = font2.render(frase1, 1, (0, 0, 0))
+    text2 = font2.render(frase2, 1, (0, 0, 0))
+    text3 = font2.render(frase3, 1, (0, 0, 0))
+    screen.blit(text1, (20, 520))       
+    screen.blit(text2, (20, 540))
+    screen.blit(text3, (20, 560))
  
 # Display instruction for the game
 def instruction():
