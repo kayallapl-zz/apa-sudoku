@@ -1,5 +1,6 @@
 import pygame
-from solver import solve, valid
+from solver import find_empty, valid, solve
+from boards import hard
 import time
 pygame.font.init()
 
@@ -29,19 +30,49 @@ class Grid:
     def update_model(self):
         self.model = [[self.cubes[i][j].value for j in range(self.cols)] for i in range(self.rows)]
 
-    def place(self, val):
-        row, col = self.selected
-        if self.cubes[row][col].value == 0:
-            self.cubes[row][col].set(val)
-            self.update_model()
-
-            if valid(self.model, val, (row,col)) and solve(self.model):
+    def place(self, val, bo, solve):
+        while(bo != solve):
+            find = find_empty(bo)
+            if not find:
                 return True
             else:
+                row, col = find
+
+            for i in range(1,10):
+                bo[row][col] = i
+                self.cubes[row][col].set(i)
+                self.update_model()
+                validation = valid(bo, i, (row, col))
+                print("\n")
+                # print_board(bo)
+                time.sleep(0.1)
+                print("\n")
+                if validation:
+                    pass
+
+                    if solve(bo):
+                        return True
+
+                # Backtracking
+                bo[row][col] = 0
                 self.cubes[row][col].set(0)
                 self.cubes[row][col].set_temp(0)
                 self.update_model()
-                return False
+
+            return False
+
+        # row, col = self.selected
+        # if self.cubes[row][col].value == 0:
+        #     self.cubes[row][col].set(val)
+        #     self.update_model()
+
+        #     if valid(self.model, val, (row,col)) and solve(self.model):
+        #         return True
+        #     else:
+        #         self.cubes[row][col].set(0)
+        #         self.cubes[row][col].set_temp(0)
+        #         self.update_model()
+        #         return False
 
     def sketch(self, val):
         row, col = self.selected
@@ -165,6 +196,9 @@ def main():
     run = True
     start = time.time()
     strikes = 0
+    table = hard[0]
+    boardSolved = solve(board)
+    
     while run:
 
         play_time = round(time.time() - start)
@@ -197,7 +231,7 @@ def main():
                 if event.key == pygame.K_RETURN:
                     i, j = board.selected
                     if board.cubes[i][j].temp != 0:
-                        if board.place(board.cubes[i][j].temp):
+                        if board.place(board.cubes[i][j].temp, table, boardSolved):
                             print("Success")
                         else:
                             print("Wrong")

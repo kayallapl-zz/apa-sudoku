@@ -1,3 +1,6 @@
+from boards import hard
+import time
+
 def solve(bo):
     find = find_empty(bo)
     if not find:
@@ -6,13 +9,20 @@ def solve(bo):
         row, col = find
 
     for i in range(1,10):
-        if valid(bo, i, (row, col)):
-            bo[row][col] = i
+        bo[row][col] = i
+        validation = valid(bo, i, (row, col))
+        # print("\n")
+        # print_board(bo)
+        # time.sleep(0.1)
+        # print("\n")
+        if validation:
+            pass
 
             if solve(bo):
                 return True
 
-            bo[row][col] = 0
+        # Backtracking
+        bo[row][col] = 0
 
     return False
 
@@ -43,7 +53,7 @@ def valid(bo, num, pos):
 def print_board(bo):
     for i in range(len(bo)):
         if i % 3 == 0 and i != 0:
-            print("- - - - - - - - - - - - - ")
+            print("- - - - - - - - - - - -")
 
         for j in range(len(bo[0])):
             if j % 3 == 0 and j != 0:
@@ -62,3 +72,8 @@ def find_empty(bo):
                 return (i, j)  # row, col
 
     return None
+
+# print('Initial board\n')
+# print_board(hard[0])
+# print('\n')
+# solve(hard[0])
