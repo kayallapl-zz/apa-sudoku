@@ -1,6 +1,3 @@
-- PERGUNTAR o que exatamente vamos avaliar
-- PERGUNTAR sobre sistema de resolver automatico
-- PERGUNTAR sobre selecionar dificuldade
-- sistema de dica - kay
-- subir pro repositorio - kay
-- backtraking - jonatas
+- dificuldades
+- colocar temporizador
+- versão interativa: retornando o motivo pelo qual ocorreu o Backtracking
