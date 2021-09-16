@@ -1,5 +1,6 @@
 # import pygame library
 import pygame
+from pygame.constants import KEYDOWN
  
 # initialise the pygame font
 pygame.font.init()
@@ -84,16 +85,16 @@ def raise_error2():
 def valid(m, i, j, val):
     for it in range(9):
         if m[i][it] == val:
-            return False
+            return (False, "linha")
         if m[it][j] == val:
-            return False
+            return (False, "coluna")
     it = i // 3
     jt = j // 3
     for i in range(it * 3, it * 3 + 3):
         for j in range (jt * 3, jt * 3 + 3):
             if m[i][j] == val:
-                return False
-    return True
+                return (False, "quadrado")
+    return (True, "")
 
 def find_empty(bo):
     for j in range(len(bo)):
@@ -113,7 +114,8 @@ def solve(grid, i, j):
     pygame.event.pump()
     
     for it in range(1, 10):
-        if valid(grid, i, j, it):
+        valido, motivo = valid(grid, i, j, it)
+        if valido:
             grid[i][j] = it
             global x, y
             x = i
@@ -134,7 +136,18 @@ def solve(grid, i, j):
             draw()
             draw_box()
             pygame.display.update()
-            pygame.time.delay(50)   
+            pygame.time.delay(50)
+        pause = True
+        print("\n tentando: ")
+        print(it)
+        print("\n na posição: ")
+        print(i, j)
+        print("\nnão conseguiu pq:  ")
+        print(motivo)
+        while pause:
+            event = pygame.event.wait()
+            if event.type == KEYDOWN:  # Unpausing
+                pause = False
     return False 
  
 # Display instruction for the game
