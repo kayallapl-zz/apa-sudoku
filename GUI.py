@@ -120,31 +120,31 @@ def solve(grid, i, j):
             global x, y
             x = i
             y = j
-            # white color background\
-            screen.fill((255, 255, 255))
-            draw()
-            draw_box()
-            pygame.display.update()
-            pygame.time.delay(50)
+
+            update_screen()
             if solve(grid, i, j):
                 return True
             else:
                 grid[i][j] = 0
-            # white color background\
-            screen.fill((255, 255, 255))
-         
-            draw()
-            draw_box()
+
+            update_screen()
+        if interactive:
+            pause = True
+            feedback(it, i, j, motivo)
             pygame.display.update()
-            pygame.time.delay(50)
-        pause = True
-        feedback(it, i, j, motivo)
-        pygame.display.update()
-        while pause:
-            event = pygame.event.wait()
-            if event.type == KEYDOWN:  # Unpausing
-                pause = False
-    return False 
+            while pause:
+                event = pygame.event.wait()
+                if event.type == KEYDOWN:  # Unpausing
+                    update_screen()
+                    pause = False
+    return False
+
+def update_screen():
+    screen.fill((255, 255, 255))
+    draw()
+    draw_box()
+    pygame.display.update()
+    pygame.time.delay(50)
  
 # Display instruction for the game
 def feedback(it, linha, coluna, motivo):
@@ -172,8 +172,8 @@ def result():
     text1 = font1.render("FINISHED", 1, (0, 0, 0))
     screen.blit(text1, (20, 580))   
 run = True
-flag1 = 0
-flag2 = 0
+keydown = 0
+play = 0
 interactive = 0
 rs = 0
 error = 0
@@ -189,48 +189,33 @@ while run:
             run = False 
         # Get the mouse position to insert number   
         if event.type == pygame.MOUSEBUTTONDOWN:
-            flag1 = 1
+            keydown = 1
             pos = pygame.mouse.get_pos()
             get_cord(pos)
         # Get the number to be inserted if key pressed   
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 x -= 1
-                flag1 = 1
+                keydown = 1
             if event.key == pygame.K_RIGHT:
                 x += 1
-                flag1 = 1
+                keydown = 1
             if event.key == pygame.K_UP:
                 y -= 1
-                flag1 = 1
+                keydown = 1
             if event.key == pygame.K_DOWN:
                 y += 1
-                flag1 = 1   
+                keydown = 1   
             if event.key == pygame.K_1:
-                flag2 = 1
-            # if event.key == pygame.K_2:
-            #     val = 2   
-            # if event.key == pygame.K_3:
-            #     val = 3
-            # if event.key == pygame.K_4:
-            #     val = 4
-            # if event.key == pygame.K_5:
-            #     val = 5
-            # if event.key == pygame.K_6:
-            #     val = 6
-            # if event.key == pygame.K_7:
-            #     val = 7
-            # if event.key == pygame.K_8:
-            #     val = 8
-            # if event.key == pygame.K_9:
-            #     val = 9 
-            # if event.key == pygame.K_RETURN:
-            #     flag2 = 1
-            # If D is pressed reset the board to default
+                play = 1
+                interactive = 0
+            if event.key == pygame.K_2:
+                interactive = 1
+                play = 1
             if event.key == pygame.K_d:
                 rs = 0
                 error = 0
-                flag2 = 0
+                play = 0
                 grid = [
                     [7, 8, 0, 4, 0, 0, 1, 2, 0],
                     [6, 0, 0, 0, 7, 5, 0, 0, 9],
@@ -242,19 +227,19 @@ while run:
                     [1, 2, 0, 0, 0, 7, 4, 0, 0],
                     [0, 4, 9, 2, 0, 6, 0, 0, 7]
                 ]
-    if flag2 == 1:
+    if play == 1:
         if solve(grid, 0, 0) == False:
             error = 1
         else:
             rs = 1
-        flag2 = 0   
+        play = 0   
     if val != 0:           
         draw_val(val)
         # print(x)
         # print(y)
         if valid(grid, int(x), int(y), val) == True:
             grid[int(x)][int(y)] = val
-            flag1 = 0
+            keydown = 0
         else:
             grid[int(x)][int(y)] = 0
             raise_error2()  
@@ -265,7 +250,7 @@ while run:
     if rs == 1:
         result()       
     draw() 
-    if flag1 == 1:
+    if keydown == 1:
         draw_box()      
     instruction()   
  
