@@ -64,7 +64,6 @@ def draw():
     for i in range (9):
         for j in range (9):
             if grid[i][j] != 0:
- 
                 # Fill blue color in already numbered grid
                 pygame.draw.rect(screen, (255, 255, 255), (i * dif, j * dif, dif + 1, dif + 1))
  
@@ -85,10 +84,9 @@ def draw():
         pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)
     
     if play and not interactive:
+        global fnt, final_time
         play_time = round(time.time() - start)
-        global fnt
         text = fnt.render("Time: " + format_time(play_time), 1, (0,0,0))
-        global final_time
         final_time = text
         screen.blit(text, (540 - 200, 580))
  
@@ -98,17 +96,19 @@ def raise_error():
     screen.blit(text1, (20, 570))
  
 # Check if the value entered in board is valid
-def valid(m, i, j, val):
+def valid(board, i, j, value):
     for it in range(9):
-        if m[i][it] == val:
+        if board[i][it] == value:
             return (False, "coluna")
-        if m[it][j] == val:
+        if board[it][j] == value:
             return (False, "linha")
-    it = i // 3
-    jt = j // 3
-    for i in range(it * 3, it * 3 + 3):
-        for j in range (jt * 3, jt * 3 + 3):
-            if m[i][j] == val:
+
+    box_x = i // 3
+    box_y = j // 3
+
+    for i in range(box_x * 3, box_x * 3 + 3):
+        for j in range (box_y * 3, box_y * 3 + 3):
+            if board[i][j] == value:
                 return (False, "quadrado")
     return (True, "")
 
