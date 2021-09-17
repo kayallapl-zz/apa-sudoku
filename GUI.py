@@ -182,6 +182,7 @@ while run:
      
     # White color background
     screen.fill((255, 255, 255))
+    draw()
     # Loop through the events stored in event.get()
     for event in pygame.event.get():
         # Quit the game window
@@ -251,8 +252,8 @@ while run:
         result()       
     draw() 
     if keydown == 1:
-        draw_box()      
-    instruction()   
+        draw_box()
+    instruction()
  
     # Update window
     pygame.display.update() 
