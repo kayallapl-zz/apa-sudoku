@@ -10,16 +10,18 @@ pygame.font.init()
 screen = pygame.display.set_mode((500, 620))
  
 # Title and Icon
-pygame.display.set_caption("SUDOKU SOLVER USING BACKTRACKING")
-# img = pygame.image.load('icon.png')
-# pygame.display.set_icon(img)
+pygame.display.set_caption("SUDOKU - BACKTRACKING")
 
+run = True
+displayResult = False
+hasError = False
 start = time.time()
-play = 0
+play = False
 interactive = False
 dif = 500 / 9
 fnt = pygame.font.SysFont("comicsans", 40)
 final_time = fnt.render("Time: " + "0.0", 1, (0,0,0))
+
 # Default Sudoku Board.
 grid = [
         [7, 8, 0, 4, 0, 0, 1, 2, 0],
@@ -82,7 +84,7 @@ def draw():
         pygame.draw.line(screen, (0, 0, 0), (0, i * dif), (500, i * dif), thick)
         pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)
     
-    if play == 1 and not interactive:
+    if play and not interactive:
         play_time = round(time.time() - start)
         global fnt
         text = fnt.render("Time: " + format_time(play_time), 1, (0,0,0))
@@ -91,12 +93,9 @@ def draw():
         screen.blit(text, (540 - 200, 580))
  
 # Raise error when wrong value entered
-def raise_error1():
+def raise_error():
     text1 = font1.render("WRONG !!!", 1, (0, 0, 0))
-    screen.blit(text1, (20, 570)) 
-def raise_error2():
-    text1 = font1.render("Wrong !!! Not a valid Key", 1, (0, 0, 0))
-    screen.blit(text1, (20, 570)) 
+    screen.blit(text1, (20, 570))
  
 # Check if the value entered in board is valid
 def valid(m, i, j, val):
@@ -113,6 +112,9 @@ def valid(m, i, j, val):
                 return (False, "quadrado")
     return (True, "")
 
+# Check if has an empty value in board.
+# If has, return that position.
+# Otherwise, return None.
 def find_empty(bo):
     for j in range(len(bo)):
         for i in range(len(bo[0])):
@@ -158,7 +160,7 @@ def update_screen():
     pygame.display.update()
     pygame.time.delay(50)
  
-# Display instruction for the game
+# Display feedback for interactive game
 def feedback(it, linha, coluna, motivo):
     frase1 = "Tentativa de posicionar o número " + str(it)
     frase2 = "na linha " + str(linha+1) +", coluna " + str(coluna+1) + ", "
@@ -183,9 +185,7 @@ def instruction():
 def result():
     text1 = font1.render("FINISHED", 1, (0, 0, 0))
     screen.blit(text1, (20, 580))   
-run = True
-rs = 0
-error = 0
+
 # The loop thats keep the window running
 while run:
     # White color background
@@ -199,15 +199,15 @@ while run:
         # Get the number to be inserted if key pressed   
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:
-                play = 1
+                play = True
                 interactive = False
             if event.key == pygame.K_2:
-                play = 1
+                play = True
                 interactive = True
             if event.key == pygame.K_d:
-                rs = 0
-                error = 0
-                play = 0
+                displayResult = False
+                hasError = False
+                play = False
                 grid = [
                     [7, 8, 0, 4, 0, 0, 1, 2, 0],
                     [6, 0, 0, 0, 7, 5, 0, 0, 9],
@@ -219,18 +219,20 @@ while run:
                     [1, 2, 0, 0, 0, 7, 4, 0, 0],
                     [0, 4, 9, 2, 0, 6, 0, 0, 7]
                 ]
-    if play == 1:
+    if play:
         start = time.time()
         if solve(grid, 0, 0) == False:
-            error = 1
+            hasError = True
         else:
-            rs = 1
-        play = 0
+            displayResult = True
+        play = False
        
-    if error == 1:
-        raise_error1() 
-    if rs == 1:
-        result()       
+    if hasError:
+        raise_error() 
+
+    if displayResult:
+        result()    
+           
     draw()
     instruction()
     if not interactive:
