@@ -18,7 +18,6 @@ start = time.time()
 play = 0
 interactive = False
 dif = 500 / 9
-val = 0
 fnt = pygame.font.SysFont("comicsans", 40)
 final_time = fnt.render("Time: " + "0.0", 1, (0,0,0))
 # Default Sudoku Board.
