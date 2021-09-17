@@ -118,8 +118,13 @@ def solve(grid, i, j):
         if valido:
             grid[i][j] = it
             global x, y
-            x = i
-            y = j
+            if (i == 9):
+                x = 0
+                y = j + 1
+            else:
+                x = i + 1
+                y = j
+            draw_box()
 
             update_screen()
             if solve(grid, i, j):
