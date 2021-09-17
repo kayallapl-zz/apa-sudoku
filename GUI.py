@@ -1,5 +1,6 @@
 # import pygame library
 import pygame
+import time
 from pygame.constants import KEYDOWN
  
 # initialise the pygame font
@@ -12,13 +13,28 @@ screen = pygame.display.set_mode((500, 620))
 pygame.display.set_caption("SUDOKU SOLVER USING BACKTRACKING")
 # img = pygame.image.load('icon.png')
 # pygame.display.set_icon(img)
- 
-x = 0
-y = 0
+
+start = time.time()
+play = 0
+interactive = False
 dif = 500 / 9
 val = 0
+fnt = pygame.font.SysFont("comicsans", 40)
+final_time = fnt.render("Time: " + "0.0", 1, (0,0,0))
 # Default Sudoku Board.
 grid = [
+        [7, 8, 0, 4, 0, 0, 1, 2, 0],
+        [6, 0, 0, 0, 7, 5, 0, 0, 9],
+        [0, 0, 0, 6, 0, 1, 0, 7, 8],
+        [0, 0, 7, 0, 4, 0, 2, 6, 0],
+        [0, 0, 1, 0, 5, 0, 9, 3, 0],
+        [9, 0, 4, 0, 6, 0, 0, 0, 5],
+        [0, 7, 0, 3, 0, 0, 0, 1, 2],
+        [1, 2, 0, 0, 0, 7, 4, 0, 0],
+        [0, 4, 9, 2, 0, 6, 0, 0, 7]
+    ]
+
+grid_original = [
         [7, 8, 0, 4, 0, 0, 1, 2, 0],
         [6, 0, 0, 0, 7, 5, 0, 0, 9],
         [0, 0, 0, 6, 0, 1, 0, 7, 8],
@@ -33,22 +49,17 @@ grid = [
 # Load test fonts for future use
 font1 = pygame.font.SysFont("comicsans", 40)
 font2 = pygame.font.SysFont("comicsans", 20)
-def get_cord(pos):
-    global x
-    x = pos[0] // dif
-    global y
-    y = pos[1] // dif
- 
-# Highlight the cell selected
-def draw_box():
-    for i in range(2):
-        pygame.draw.line(screen, (255, 0, 0), (x * dif-3, (y + i)*dif), (x * dif + dif + 3, (y + i)*dif), 7)
-        pygame.draw.line(screen, (255, 0, 0), ( (x + i)* dif, y * dif ), ((x + i) * dif, y * dif + dif), 7)  
- 
-# Function to draw required lines for making Sudoku grid        
+
+def format_time(secs):
+    sec = secs%60
+    minute = secs//60
+
+    mat = " " + str(minute) + ":" + str(sec)
+    return mat
+
+# Function to draw required lines for making Sudoku grid
 def draw():
     # Draw the lines
-        
     for i in range (9):
         for j in range (9):
             if grid[i][j] != 0:
@@ -57,21 +68,28 @@ def draw():
                 pygame.draw.rect(screen, (255, 255, 255), (i * dif, j * dif, dif + 1, dif + 1))
  
                 # Fill grid with default numbers specified
-                text1 = font1.render(str(grid[i][j]), 1, (0, 0, 0))
+                if grid[i][j] == grid_original[i][j]:
+                    color = (0, 0, 0)
+                else:
+                    color = (255, 0, 0)
+                text1 = font1.render(str(grid[i][j]), 1, color)
                 screen.blit(text1, (i * dif + 15, j * dif + 15))
-    # Draw lines horizontally and verticallyto form grid          
+    # Draw lines horizontally and verticallyto form grid
     for i in range(10):
         if i % 3 == 0 :
             thick = 7
         else:
             thick = 1
         pygame.draw.line(screen, (0, 0, 0), (0, i * dif), (500, i * dif), thick)
-        pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)     
- 
-# Fill value entered in cell     
-def draw_val(val):
-    text1 = font1.render(str(val), 1, (0, 0, 0))
-    screen.blit(text1, (x * dif + 15, y * dif + 15))   
+        pygame.draw.line(screen, (0, 0, 0), (i * dif, 0), (i * dif, 500), thick)
+    
+    if play == 1 and not interactive:
+        play_time = round(time.time() - start)
+        global fnt
+        text = fnt.render("Time: " + format_time(play_time), 1, (0,0,0))
+        global final_time
+        final_time = text
+        screen.blit(text, (540 - 200, 580))
  
 # Raise error when wrong value entered
 def raise_error1():
@@ -117,15 +135,6 @@ def solve(grid, i, j):
         valido, motivo = valid(grid, i, j, it)
         if valido:
             grid[i][j] = it
-            global x, y
-            if (i == 9):
-                x = 0
-                y = j + 1
-            else:
-                x = i + 1
-                y = j
-            draw_box()
-
             update_screen()
             if solve(grid, i, j):
                 return True
@@ -147,7 +156,6 @@ def solve(grid, i, j):
 def update_screen():
     screen.fill((255, 255, 255))
     draw()
-    draw_box()
     pygame.display.update()
     pygame.time.delay(50)
  
@@ -177,14 +185,10 @@ def result():
     text1 = font1.render("FINISHED", 1, (0, 0, 0))
     screen.blit(text1, (20, 580))   
 run = True
-keydown = 0
-play = 0
-interactive = 0
 rs = 0
 error = 0
 # The loop thats keep the window running
 while run:
-     
     # White color background
     screen.fill((255, 255, 255))
     draw()
@@ -192,32 +196,15 @@ while run:
     for event in pygame.event.get():
         # Quit the game window
         if event.type == pygame.QUIT:
-            run = False 
-        # Get the mouse position to insert number   
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            keydown = 1
-            pos = pygame.mouse.get_pos()
-            get_cord(pos)
+            run = False
         # Get the number to be inserted if key pressed   
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                x -= 1
-                keydown = 1
-            if event.key == pygame.K_RIGHT:
-                x += 1
-                keydown = 1
-            if event.key == pygame.K_UP:
-                y -= 1
-                keydown = 1
-            if event.key == pygame.K_DOWN:
-                y += 1
-                keydown = 1   
             if event.key == pygame.K_1:
                 play = 1
-                interactive = 0
+                interactive = False
             if event.key == pygame.K_2:
-                interactive = 1
                 play = 1
+                interactive = True
             if event.key == pygame.K_d:
                 rs = 0
                 error = 0
@@ -234,31 +221,21 @@ while run:
                     [0, 4, 9, 2, 0, 6, 0, 0, 7]
                 ]
     if play == 1:
+        start = time.time()
         if solve(grid, 0, 0) == False:
             error = 1
         else:
             rs = 1
-        play = 0   
-    if val != 0:           
-        draw_val(val)
-        # print(x)
-        # print(y)
-        if valid(grid, int(x), int(y), val) == True:
-            grid[int(x)][int(y)] = val
-            keydown = 0
-        else:
-            grid[int(x)][int(y)] = 0
-            raise_error2()  
-        val = 0   
+        play = 0
        
     if error == 1:
         raise_error1() 
     if rs == 1:
         result()       
-    draw() 
-    if keydown == 1:
-        draw_box()
+    draw()
     instruction()
+    if not interactive:
+        screen.blit(final_time, (540 - 200, 580))
  
     # Update window
     pygame.display.update() 

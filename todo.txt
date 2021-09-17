@@ -1,3 +1,1 @@
 - dificuldades
-- colocar temporizador
-- versão interativa: retornando o motivo pelo qual ocorreu o Backtracking
