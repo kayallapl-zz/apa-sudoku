@@ -106,7 +106,6 @@ def solve(grid, i, j):
         return True
     else:
         i, j = find
-    pygame.event.pump()
     
     for it in range(1, 10):
         valido, motivo = valid(grid, i, j, it)
@@ -177,8 +176,13 @@ def render_difficulty():
     text1 = font2.render(str("Dificuldade: " + string), 1, color)
     screen.blit(text1, (540 - 175, 515))
 
+start = 0
+grid = []
+
 # The loop thats keep the window running
 while run:
+    if len(grid) > 0:
+        lastgrid = grid
     if dificulty == 1:
         grid = copy.deepcopy(easy[random_int])
         grid_original = copy.deepcopy(easy[random_int])
@@ -209,17 +213,7 @@ while run:
                 displayResult = False
                 hasError = False
                 play = False
-                grid = [
-                    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-                    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-                    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-                    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-                    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-                    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-                    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-                    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-                    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-                ]
+                grid = grid_original
             if event.key == pygame.K_d:
                 random_int = random.randint(0,2)
                 if dificulty < 3:
@@ -235,16 +229,13 @@ while run:
         play = False
 
     if displayResult:
-        result()    
-           
+        result()
+        grid = lastgrid
     draw()
     instruction()
     render_difficulty()
     if not interactive:
         screen.blit(final_time, (540 - 180, 585))
- 
-    # Update window
-    pygame.display.update() 
  
 # Quit pygame window   
 # pygame.quit()    
