@@ -27,7 +27,9 @@ fnt = pygame.font.SysFont("comicsans", 40)
 final_time = fnt.render("Time: " + " 0.0", 1, (0,0,0))
 dificulty = 2
 random_int = random.randint(0,2)
- 
+grid = intermediary[random_int]
+grid_original = intermediary[random_int]
+
 # Load test fonts for future use
 font1 = pygame.font.SysFont("comicsans", 40)
 font2 = pygame.font.SysFont("comicsans", 20)
@@ -176,22 +178,23 @@ def render_difficulty():
     text1 = font2.render(str("Dificuldade: " + string), 1, color)
     screen.blit(text1, (540 - 175, 515))
 
-start = 0
-grid = []
-
-# The loop thats keep the window running
-while run:
-    if len(grid) > 0:
-        lastgrid = grid
+def change_difficulty():
+    global dificulty, grid, grid_original
     if dificulty == 1:
         grid = copy.deepcopy(easy[random_int])
         grid_original = copy.deepcopy(easy[random_int])
+        dificulty = 2
     elif dificulty == 2:
         grid = copy.deepcopy(intermediary[random_int])
         grid_original = copy.deepcopy(intermediary[random_int])
+        dificulty = 0
     else: 
         grid = copy.deepcopy(hard[random_int])
         grid_original = copy.deepcopy(hard[random_int])
+        dificulty = 1
+
+# The loop thats keep the window running
+while run:
 
     # White color background
     screen.fill((255, 255, 255))
@@ -216,10 +219,7 @@ while run:
                 grid = grid_original
             if event.key == pygame.K_d:
                 random_int = random.randint(0,2)
-                if dificulty < 3:
-                    dificulty += 1
-                else:
-                    dificulty = 1
+                change_difficulty()
     if play:
         start = time.time()
         if solve(grid, 0, 0) == False:
@@ -230,7 +230,6 @@ while run:
 
     if displayResult:
         result()
-        grid = lastgrid
     draw()
     instruction()
     render_difficulty()
