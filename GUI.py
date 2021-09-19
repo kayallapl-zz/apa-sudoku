@@ -27,6 +27,8 @@ fnt = pygame.font.SysFont("comicsans", 40)
 final_time = fnt.render("Time: " + " 0.0", 1, (0,0,0))
 dificulty = 2
 random_int = random.randint(0,2)
+grid = copy.deepcopy(intermediary[random_int])
+grid_original = copy.deepcopy(intermediary[random_int])
  
 # Load test fonts for future use
 font1 = pygame.font.SysFont("comicsans", 40)
@@ -69,7 +71,7 @@ def draw():
         play_time = round(time.time() - start)
         text = fnt.render("Time: " + format_time(play_time), 1, (0,0,0))
         final_time = text
-        screen.blit(text, (540 - 180, 585))
+        screen.blit(text, (540 - 190, 585))
  
 # Check if the value entered in board is valid
 def valid(board, i, j, value):
@@ -177,17 +179,23 @@ def render_difficulty():
     text1 = font2.render(str("Dificuldade: " + string), 1, color)
     screen.blit(text1, (540 - 175, 515))
 
-# The loop thats keep the window running
-while run:
+def change_difficulty():
+    global dificulty, grid, grid_original
     if dificulty == 1:
         grid = copy.deepcopy(easy[random_int])
         grid_original = copy.deepcopy(easy[random_int])
+        dificulty = 2
     elif dificulty == 2:
         grid = copy.deepcopy(intermediary[random_int])
         grid_original = copy.deepcopy(intermediary[random_int])
+        dificulty = 0
     else: 
         grid = copy.deepcopy(hard[random_int])
         grid_original = copy.deepcopy(hard[random_int])
+        dificulty = 1
+
+# The loop thats keep the window running
+while run:
 
     # White color background
     screen.fill((255, 255, 255))
@@ -209,23 +217,10 @@ while run:
                 displayResult = False
                 hasError = False
                 play = False
-                grid = [
-                    [7, 8, 0, 4, 0, 0, 1, 2, 0],
-                    [6, 0, 0, 0, 7, 5, 0, 0, 9],
-                    [0, 0, 0, 6, 0, 1, 0, 7, 8],
-                    [0, 0, 7, 0, 4, 0, 2, 6, 0],
-                    [0, 0, 1, 0, 5, 0, 9, 3, 0],
-                    [9, 0, 4, 0, 6, 0, 0, 0, 5],
-                    [0, 7, 0, 3, 0, 0, 0, 1, 2],
-                    [1, 2, 0, 0, 0, 7, 4, 0, 0],
-                    [0, 4, 9, 2, 0, 6, 0, 0, 7]
-                ]
+                grid = grid_original
             if event.key == pygame.K_d:
                 random_int = random.randint(0,2)
-                if dificulty < 3:
-                    dificulty += 1
-                else:
-                    dificulty = 1
+                change_difficulty()
     if play:
         start = time.time()
         if solve(grid, 0, 0) == False:
@@ -241,7 +236,7 @@ while run:
     instruction()
     render_difficulty()
     if not interactive:
-        screen.blit(final_time, (540 - 180, 585))
+        screen.blit(final_time, (540 - 190, 585))
  
     # Update window
     pygame.display.update() 
