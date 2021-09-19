@@ -121,7 +121,7 @@ def solve(grid, i, j):
             update_screen()
         if interactive:
             pause = True
-            feedback(it, i, j, motivo)
+            feedback(it, j, i, motivo)
             pygame.display.update()
             while pause:
                 event = pygame.event.wait()
