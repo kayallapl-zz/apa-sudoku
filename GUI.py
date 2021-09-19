@@ -46,16 +46,16 @@ def draw():
     # Draw the lines
     for i in range (9):
         for j in range (9):
-            if grid[i][j] != 0:
+            if grid[j][i] != 0:
                 # Fill blue color in already numbered grid
                 pygame.draw.rect(screen, (255, 255, 255), (i * dif, j * dif, dif + 1, dif + 1))
  
                 # Fill grid with default numbers specified
-                if grid[i][j] == grid_original[i][j]:
+                if grid[j][i] == grid_original[j][i]:
                     color = (0, 0, 0)
                 else:
                     color = (255, 0, 0)
-                text1 = font1.render(str(grid[i][j]), 1, color)
+                text1 = font1.render(str(grid[j][i]), 1, color)
                 screen.blit(text1, (i * dif + 15, j * dif + 15))
     # Draw lines horizontally and verticallyto form grid
     for i in range(10):
@@ -94,8 +94,8 @@ def valid(board, i, j, value):
 # If has, return that position.
 # Otherwise, return None.
 def find_empty(bo):
-    for j in range(len(bo)):
-        for i in range(len(bo[0])):
+    for i in range(len(bo)):
+        for j in range(len(bo[0])):
             if bo[i][j] == 0:
                 return (i, j)  # row, col
 
@@ -123,7 +123,7 @@ def solve(grid, i, j):
             update_screen()
         if interactive:
             pause = True
-            feedback(it, j, i, motivo)
+            feedback(it, i, j, motivo)
             pygame.display.update()
             while pause:
                 event = pygame.event.wait()
@@ -167,32 +167,32 @@ def result():
     screen.blit(text1, (15, 585))
 
 def render_difficulty():
-    if dificulty == 2:
+    if dificulty == 1:
+        string = "FÁCIL"
+        color = (0, 200, 0)
+    elif dificulty == 2:
         string = "MÉDIA"
         color = (0, 80, 255)
     elif dificulty == 3:
         string = "DIFÍCIL"
         color = (255, 0, 0)
-    else:
-        string = "FÁCIL"
-        color = (0, 200, 0)
     text1 = font2.render(str("Dificuldade: " + string), 1, color)
     screen.blit(text1, (540 - 175, 515))
 
 def change_difficulty():
     global dificulty, grid, grid_original
     if dificulty == 1:
-        grid = copy.deepcopy(easy[random_int])
-        grid_original = copy.deepcopy(easy[random_int])
         dificulty = 2
+        grid = copy.deepcopy(intermediary[2])
+        grid_original = copy.deepcopy(intermediary[2])
     elif dificulty == 2:
-        grid = copy.deepcopy(intermediary[random_int])
-        grid_original = copy.deepcopy(intermediary[random_int])
-        dificulty = 0
-    else: 
+        dificulty = 3
         grid = copy.deepcopy(hard[random_int])
         grid_original = copy.deepcopy(hard[random_int])
+    elif dificulty == 3:
         dificulty = 1
+        grid = copy.deepcopy(easy[random_int])
+        grid_original = copy.deepcopy(easy[random_int])
 
 # The loop thats keep the window running
 while run:
