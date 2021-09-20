@@ -10,7 +10,8 @@
 </ul>
 
 ### Apresentação
-<p>A apresentação do trabalho com os tópicos acima se encontra no link: <a>https://www.figma.com/proto/l4tfX4tUUodnzXtKVxfhbT/Sudoku---APA?node-id=1%3A28&starting-point-node-id=1%3A28&scaling=scale-down</a></p>
+<p>A apresentação do trabalho com os tópicos acima se encontra no link:</p>
+https://www.figma.com/proto/l4tfX4tUUodnzXtKVxfhbT/Sudoku---APA?node-id=1%3A28&starting-point-node-id=1%3A28&scaling=scale-down
 
 
 ### 🎲 Rodando o código
