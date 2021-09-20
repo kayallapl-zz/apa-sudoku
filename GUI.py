@@ -77,9 +77,9 @@ def draw():
 def valid(board, i, j, value):
     for it in range(9):
         if board[i][it] == value:
-            return (False, "coluna")
-        if board[it][j] == value:
             return (False, "linha")
+        if board[it][j] == value:
+            return (False, "coluna")
 
     box_x = i // 3
     box_y = j // 3
@@ -217,7 +217,7 @@ while run:
                 displayResult = False
                 hasError = False
                 play = False
-                grid = grid_original
+                grid = copy.deepcopy(grid_original)
             if event.key == pygame.K_d:
                 random_int = random.randint(0,2)
                 change_difficulty()
